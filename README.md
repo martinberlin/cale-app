@@ -1,4 +1,4 @@
-![CALE Logo](/screenshot/cale-logo.svg)
+![CALE Logo](https://raw.githubusercontent.com/martinberlin/eink-calendar/master/screenshot/cale-logo.svg)
 
 **A very easy and straight-forward E-Ink Screen configurator**
 
