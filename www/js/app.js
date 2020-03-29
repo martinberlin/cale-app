@@ -1,7 +1,8 @@
 let VERSION = '1.1.0';
 
 let d = document;
-let v = d.getElementById('video');
+let v = d.getElementById('video'),
+    video_container = d.getElementById('video-container');
 
 let wifi_store = d.getElementById('wifi_store'),
     wifi_ssid = d.getElementById('wifi_ssid'),
@@ -64,7 +65,6 @@ d.addEventListener('deviceready', function(){
     // Blue App
     let blue = {
         list: function() {
-            video_c.style.display = 'none';
             device_list_paired.innerHTML = '';
             device_list_unpaired.innerHTML = '';
             d.getElementById('ble_msg_foot').innerText = '';
@@ -314,11 +314,17 @@ d.addEventListener('deviceready', function(){
            );
         }
      };
+     // Start BLUE discovery
+     blue.start();
+
+
      d.getElementById('wt-tab').onclick = function() {
+        video_container.style.display = 'none';
         blue.discoveryDisable();
         return false;
      }
      d.getElementById('ble-tab').onclick = function() {
+        video_container.style.display = 'block';
         blue.discoveryDisable();
         blue.displayClear();
         blue.start();
