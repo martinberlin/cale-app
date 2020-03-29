@@ -305,7 +305,7 @@ d.addEventListener('deviceready', function(){
         },
         postWifiSend: function(){
             blue.hidePreload(wifi_pre);
-            wifi_msg.innerHTML = 'Check on the antenna tab please';
+            wifi_msg.innerHTML = 'Settings sent. Restarting';
         },
         start: function() {
            bluetoothSerial.isEnabled(
