@@ -5,8 +5,7 @@ let v = d.getElementById('video'),
     video_container = d.getElementById('video-container');
 
 let wifi_store = d.getElementById('wifi_store'),
-    wifi_ssid = d.getElementById('wifi_ssid'),
-    wifi_pass = d.getElementById('wifi_pass'),
+    json_config = d.getElementById('json_config'),
     wifi_msg = d.getElementById('wifi_msg'),
     wifi_pre = d.getElementById('wifi_pre');
 
@@ -58,7 +57,7 @@ d.addEventListener('deviceready', function(){
        if (wifi_store.checked) {
           wifi_msg.innerHTML = '<span style="color:red"><b>Security:</b> When you are done leave it unchecked</span>';
        } else {
-          wifi_msg.innerText = 'Password was removed from local storage'
+          wifi_msg.innerText = 'Config was removed from local storage'
        }
     }
 
@@ -162,7 +161,7 @@ d.addEventListener('deviceready', function(){
                 ble_type = b.target.getAttribute('data-type');
                 ble_name = b.target.getAttribute('data-name');
                 ble_mac = b.target.getAttribute('data-mac');
-                wifi_msg.innerText = "Target: "+ble_name;
+                wifi_msg.innerHTML = "<small>"+ble_name+"</small>";
                 let wifiTabInit = tabsCollection[1].Tab;
                 blue.startConnection();
                 wifiTabInit.show();
@@ -335,37 +334,26 @@ d.addEventListener('deviceready', function(){
         blue.sendMessage('{"reset":"true"}');
         return false;
      }
-     d.getElementById('ble_erase').onclick = function() {
-        blue.displayClear();
-        blue.sendMessage('{"erase":"true"}');
-        udpCommand(114); // reset WiFi also via UDP if controller is online
-        return false;
-     }
 
     // Send WiFi configuration to ESP32
     ble_set_config.onclick = function() {
-        if (wifi_ssid.value !== '' && wifi_pass.value !== '') {
-             blue.sendMessage('{"ssidPrim":"'+wifi_ssid.value+'","pwPrim":"'+wifi_pass.value+'","ssidSec":"ssid2","pwSec":""}');
+
+        if (json_config.value !== '') {
+            if (isValidJson(json_config.value)) {
+             blue.sendMessage(json_config.value);
              wifi_msg.innerText = "Sending AP to "+ble_name;
              blue.showPreload(wifi_pre);
              setTimeout(blue.postWifiSend, 5000);
+             } else {
+                 json_config.style.borderColor = "red";
+                 wifi_msg.innerHTML = '<span style="color:red">Not a valid JSON text</span>';
+             }
         } else {
-           wifi_msg.innerHTML = '<span style="color:red">Please set a valid SSID and password</span>';
+            json_config.style.borderColor = "red";
+            wifi_msg.innerHTML = '<span style="color:red">Please paste the JSON text from CALE Screen config</span>';
         }
-        if (wifi_ssid.value === '') {
-           wifi_ssid.style.borderColor = "red";
-        } else {
-           wifi_ssid.style.borderColor = "black";
-        }
-        if (wifi_pass.value === '') {
-           wifi_pass.style.borderColor = "red";
-        } else {
-           wifi_pass.style.borderColor = "black";
-        }
-
         return false;
     }
-
 
     v.addEventListener('play', function(){
       // play event
@@ -385,11 +373,10 @@ function saveFormState() {
   const form = d.querySelector('form');
   const data = objectFromEntries(new FormData(form).entries());
   if (!wifi_store.checked) {
-     data.wifi_pass = '';
+     data.json_config = '';
   }
   let formJson = JSON.stringify(data);
   storage.setItem('form', formJson);
-  //storage.setItem('protocol', protocol.value);
 }
   
 /**
@@ -438,4 +425,13 @@ function dropdownSet(selectObj, valueToSet) {
             return;
         }
     }
+}
+
+function isValidJson(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
 }

@@ -8,7 +8,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="msapplication-tap-highlight" content="no">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>udpx Video</title>
+    <title>CALE</title>
     <link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="./css/style-chromeapp.css">
 </head>
@@ -28,22 +28,18 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-4" id="video-c">
-                <div class="row">
-                    <div class="col-xs-12 video-container">
-                        <video id="video" class="video" src="./video/1.mp4" poster="./video/t5.jpg" controls></video>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-8" id="settings-container">
+            <div class="col-md-12 col-xs-12" id="settings-container">
                 <form id="main-form">
                     <ul class="nav nav-tabs" role="tablist" id="cale-tab">
                         <li role="presentation" class="active">
-                            <a href="#bt" id="ble-tab" role="tab" data-toggle="tab" aria-controls="bt">BT</a>
+                            <a href="#bt" id="ble-tab" role="tab" data-toggle="tab" aria-controls="bt">
+                                <img width="12" src="./assets/svg/blue.svg"> Blue</a>
                         </li>
                         <li role="presentation">
-                            <a href="#wt" id="wt-tab" role="tab" data-toggle="tab" aria-controls="wt">WiFi</a>
+                            <a href="#wt" id="wt-tab" role="tab" data-toggle="tab" aria-controls="wt">Config</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#in" id="in-tab" role="tab" data-toggle="tab" aria-controls="in">Info</a>
                         </li>
                     </ul>
 
@@ -72,8 +68,6 @@
                             </div>
                         </div>
 
-
-
                         <div role="tabpanel" class="tab-pane" id="wt" aria-labelledby="wt-tab">
                             <div class="form-group row">
                                 <div class="col-md-2 col-xs-2"></div>
@@ -85,20 +79,14 @@
 
                             <div class="form-group row">
                                 <div class="col-xs-12">
-                                    <label for="wifi_ssid">WiFi SSID</label>
-                                    <input id="wifi_ssid" name="wifi_ssid" type="text" class="form-control" required>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-xs-12">
-                                    <label for="wifi_pass">Password</label>
-                                    <input id="wifi_pass" name="wifi_pass" type="text" class="form-control" required>
+                                    <label for="json_config">JSON Configuration</label>
+                                    <textarea id="json_config" rows="6" name="json_config" class="form-control" required></textarea>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <div class="col-xs-12 form-check">
                                     <input id="wifi_store" name="wifi_store" type="checkbox" class="form-check-input">
-                                    <label for="wifi_store" class="form-check-label">Store password in local storage</label>
+                                    <label for="wifi_store" class="form-check-label">Store config in local storage</label>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -109,21 +97,26 @@
                                     <button class="form-control btn btn-primary" id="ble_set_config">Send config</button>
                                 </div>
                             </div>
-                            <div class="form-group row">
+                            <!--<div class="form-group row">
                                 <div class="col-xs-6">
                                     <button class="form-control btn btn-danger" id="ble_erase">Erase config</button>
                                 </div>
-                            </div>
-
+                            </div>-->
                             <div class="form-group row">
                                 <div class="col-xs-12" id="wifi_foot_msg">
                                 </div>
                             </div>
+                        </div>
 
+                        <div role="tabpanel" class="tab-pane" id="in" aria-labelledby="in-tab">
+                            CALE app let's you configure your display WiFi and Screens. Register in
+                            <a href="https://cale.es">CALE.es</a> to generate dynamic Screens.
+                            <div class="col-xs-12 video-container">
+                                <video id="video" class="video" src="./video/1.mp4" poster="./video/t5.jpg" controls></video>
+                            </div>
                             <small>support@cale.es | <a href="https://github.com/martinberlin/cale-app/issues">Report a bug</a></small><br>
                             <div id="version" style="font-size:0.8em"></div>
                         </div>
-
 
                     </div>
                 
