@@ -1,8 +1,7 @@
-let VERSION = '1.1.0';
+let VERSION = '1.1.1';
 
 let d = document;
-let v = d.getElementById('video'),
-    video_container = d.getElementById('video-container');
+let v = d.getElementById('video');
 
 let wifi_store = d.getElementById('wifi_store'),
     json_config = d.getElementById('json_config'),
@@ -318,12 +317,10 @@ d.addEventListener('deviceready', function(){
 
 
      d.getElementById('wt-tab').onclick = function() {
-        video_container.style.display = 'none';
         blue.discoveryDisable();
         return false;
      }
      d.getElementById('ble-tab').onclick = function() {
-        video_container.style.display = 'block';
         blue.discoveryDisable();
         blue.displayClear();
         blue.start();
