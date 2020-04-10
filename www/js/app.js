@@ -1,13 +1,20 @@
-let VERSION = '1.1.1';
+let VERSION = '1.1.2';
 
 let d = document;
 let v = d.getElementById('video');
-
+let container = d.getElementById('container');
 let wifi_store = d.getElementById('wifi_store'),
     json_config = d.getElementById('json_config'),
     wifi_msg = d.getElementById('wifi_msg'),
     wifi_pre = d.getElementById('wifi_pre');
+let tabs = {
+    'ble':d.getElementById('ble-tab'),
+    'wifi':d.getElementById('wt-tab'),
+    'qr':d.getElementById('qr-tab'),
+    'info':d.getElementById('in-tab')
+};
 
+let apikey = d.getElementById('apikey');
 let ble_id, ble_type, ble_name, ble_mac = '', ble_enabled = true;
 
 let storage = window.localStorage;
@@ -37,11 +44,37 @@ if (!Object.entries) {
 // DOMContentLoaded   -> deviceready for cordova
 d.addEventListener('deviceready', function(){
     loadFormState();
+    QRScanner.prepare(qrPrepare);
+    console.log(apikey.value);
+
+    if (apikey.value == '') {
+        QRScanner.show();
+        // Start a scan. Scanning will continue until something is detected or `QRScanner.cancelScan()` is called.
+        QRScanner.scan(qrDisplayContents);
+    }
 
     // Bootstrap tabsCollection
     for (var i = 0; i < tabsCollection.length; i++) {
       new Tab(tabsCollection[i],{});
     }
+    // Tab events
+    tabs['ble'].onclick = function(b) {
+       console.log('Blue tab');
+       container.style.background = 'white';
+    };
+    tabs['wifi'].onclick = function(b) {
+       console.log('WiFi tab');
+       container.style.background = 'white';
+    };
+    tabs['qr'].onclick = function(b) {
+       console.log('QR tab');
+       container.style.background = 'none transparent';
+    };
+    tabs['info'].onclick = function(b) {
+       console.log('Info tab');
+       container.style.background = 'white';
+    };
+
     // mDns discovery
     var zeroconf = cordova.plugins.zeroconf;
     zeroconf.registerAddressFamily = 'ipv4';
@@ -117,6 +150,7 @@ d.addEventListener('deviceready', function(){
 
             var service_item = d.createElement('button');
             service_item.setAttribute('class', 'form-control btn active '+ buttonClass);
+            service_item.setAttribute('style', 'margin-top:2px');
             service_item.setAttribute('type', 'button');
             service_item.setAttribute('id', service.name);
             service_item.dataset.ip = service.ipv4Addresses[0];
@@ -150,6 +184,7 @@ d.addEventListener('deviceready', function(){
             var listItem = d.createElement('button');
             listItem.setAttribute('class', 'form-control btn btn-default active');
             listItem.setAttribute('type', 'button');
+            listItem.setAttribute('style', 'margin-top:2px');
             listItem.dataset.id = device.id;
             listItem.dataset.type = typ;
             listItem.dataset.name = device.name;
@@ -334,7 +369,6 @@ d.addEventListener('deviceready', function(){
 
     // Send WiFi configuration to ESP32
     ble_set_config.onclick = function() {
-
         if (json_config.value !== '') {
             if (isValidJson(json_config.value)) {
              blue.sendMessage(json_config.value);
@@ -369,6 +403,7 @@ d.addEventListener('deviceready', function(){
 function saveFormState() {
   const form = d.querySelector('form');
   const data = objectFromEntries(new FormData(form).entries());
+  console.log(data)
   if (!wifi_store.checked) {
      data.json_config = '';
   }
@@ -432,3 +467,31 @@ function isValidJson(str) {
     }
     return true;
 }
+
+function qrPrepare(err, status){
+  if (err) {
+   console.error(err);
+  }
+  if (status.authorized) {
+    console.log('QR: status.authorized');
+    // W00t, you have camera access and the scanner is initialized.
+    // QRscanner.show() should feel very fast.
+  } else if (status.denied) {
+    console.log('QR: status.denied');
+   // The video preview will remain black, and scanning is disabled. We can
+   // try to ask the user to change their mind, but we'll have to send them
+   // to their device settings with `QRScanner.openSettings()`.
+  }
+}
+
+function qrDisplayContents(err, text){
+     if(err){
+        console.log('QR: qrDisplayContents '+err);
+       // an error occurred, or the scan was canceled (error code `6`)
+     } else {
+       // The scan completed, display the contents of the QR code:
+       alert("ApiKey transferred:\n"+text);
+       apikey.value = text;
+       saveFormState();
+     }
+   }

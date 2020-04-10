@@ -13,9 +13,10 @@
     <link rel="stylesheet" type="text/css" href="./css/style-chromeapp.css">
 </head>
 
-<body>
-    <div class="container">
-        <div class="row">
+<body style="background: none transparent">
+<form id="main-form">
+    <div class="container" id="container" style="background: white">
+        <div class="row" style="background: white">
             <div class="col-md-12">
                 <div class="row">
                     <div class="col-xs-6">
@@ -29,22 +30,23 @@
         </div>
         <div class="row">
             <div class="col-md-12 col-xs-12" id="settings-container">
-                <form id="main-form">
-                    <ul class="nav nav-tabs" role="tablist" id="cale-tab">
+                    <ul class="nav nav-tabs" role="tablist" id="cale-tab" style="background-color:white">
                         <li role="presentation" class="active">
-                            <a href="#bt" id="ble-tab" role="tab" data-toggle="tab" aria-controls="bt">
-                                <img width="12" src="./assets/svg/blue.svg"> Blue</a>
+                            <a href="#bt" id="ble-tab" role="tab" data-toggle="tab" aria-controls="bt"><small><img width="12" src="./assets/svg/blue.svg">Blue</small></a>
                         </li>
                         <li role="presentation">
-                            <a href="#wt" id="wt-tab" role="tab" data-toggle="tab" aria-controls="wt">Config</a>
+                            <a href="#wt" id="wt-tab" role="tab" data-toggle="tab" aria-controls="wt"><small>Config</small></a>
                         </li>
                         <li role="presentation">
-                            <a href="#in" id="in-tab" role="tab" data-toggle="tab" aria-controls="in">Info</a>
+                            <a href="#qr" id="qr-tab" role="tab" data-toggle="tab" aria-controls="qr"><small>Api</small></a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#in" id="in-tab" role="tab" data-toggle="tab" aria-controls="in"><small>Info</small></a>
                         </li>
                     </ul>
 
                     <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane active" id="bt" aria-labelledby="bt-tab">
+                        <div role="tabpanel" class="tab-pane active" id="bt" aria-labelledby="bt-tab" style="background-color:white">
 
                             <div class="form-group row">
                                 <div class="col-xs-12" style="margin-top:0.8em" id="ble_msg">
@@ -68,7 +70,7 @@
                             </div>
                         </div>
 
-                        <div role="tabpanel" class="tab-pane" id="wt" aria-labelledby="wt-tab">
+                        <div role="tabpanel" class="tab-pane" id="wt" aria-labelledby="wt-tab" style="background-color:white">
                             <div class="form-group row">
                                 <div class="col-md-2 col-xs-2"></div>
                                 <div class="col-md-2 col-xs-2 text-center invisible" id="wifi_pre">
@@ -79,8 +81,10 @@
 
                             <div class="form-group row">
                                 <div class="col-xs-12">
+
                                     <label for="json_config">JSON Configuration</label>
                                     <textarea id="json_config" rows="6" name="json_config" class="form-control" required></textarea>
+
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -107,8 +111,15 @@
                                 </div>
                             </div>
                         </div>
+                        <div role="tabpanel" class="tab-pane" id="qr" aria-labelledby="qr-tab">
+                           Please scan the QR code that you can see in CALE backend<br>
+                            <b>User &gt; My Api QR code</b>
+                            <!--<button class="form-control btn btn-primary" id="qr_scan">Scan again QR Code</button>-->
+                            <label for="apikey">API Key</label>
+                            <input type="text" name="apikey" id="apikey" class="form-control">
+                        </div>
 
-                        <div role="tabpanel" class="tab-pane" id="in" aria-labelledby="in-tab">
+                        <div role="tabpanel" class="tab-pane" id="in" aria-labelledby="in-tab" style="background-color:white">
                             CALE app let's you configure your display WiFi and Screens. Register in
                             <a href="https://cale.es">CALE.es</a> to generate dynamic Screens.
                             <div class="col-xs-12 video-container">
@@ -119,13 +130,10 @@
                         </div>
 
                     </div>
-                
-            </form>
             </div>
-
         </div>
         </div>
-    
+    </form>
         <script src="cordova.js"></script>
         <script src="js/bootstrap-native.js"></script>
         <script src="js/app.js"></script>
