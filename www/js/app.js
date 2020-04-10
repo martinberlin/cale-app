@@ -15,6 +15,7 @@ let tabs = {
 };
 
 let apikey = d.getElementById('apikey'), qr_scan = d.getElementById('qr_scan'), qr_stop = d.getElementById('qr_stop');
+let preload_ble = d.getElementById('preload_ble');
 let ble_id, ble_type, ble_name, ble_mac = '', ble_enabled = true;
 
 let storage = window.localStorage;
@@ -45,7 +46,7 @@ if (!Object.entries) {
 d.addEventListener('deviceready', function(){
     loadFormState();
     QRScanner.prepare(qrPrepare);
-    console.log(apikey.value);
+    setTimeout(blePreload, 10000);
 
     if (apikey.value == '') {
         QRScanner.show();
@@ -65,18 +66,12 @@ d.addEventListener('deviceready', function(){
     for (var i = 0; i < tabsCollection.length; i++) {
       new Tab(tabsCollection[i],{});
     }
+
     // Tab events
     /*tabs['ble'].onclick = function(b) {
        containerWhite();
     };
-    tabs['wifi'].onclick = function(b) {
-       containerWhite();
-    };
-    tabs['qr'].onclick = function(b) {
-    };
-    tabs['info'].onclick = function(b) {
-       containerWhite();
-    };*/
+    */
 
     // mDns discovery
     var zeroconf = cordova.plugins.zeroconf;
@@ -111,6 +106,7 @@ d.addEventListener('deviceready', function(){
                 bluetoothSerial.list(
                     function(bs) {
                         d.getElementById('ble_msg').innerText = 'Bluetooth scan. Select target:';
+
                         for (var i in bs) {
                             blue.addDevice(bs[i], 'serial', true)
                         }
@@ -338,6 +334,7 @@ d.addEventListener('deviceready', function(){
         },
         hidePreload: function(el) {
             el.style.visibility = 'hidden';
+            preload_ble.style.visibility = 'hidden';
         },
         postWifiSend: function(){
             blue.hidePreload(wifi_pre);
@@ -477,6 +474,9 @@ function containerWhite() {
 }
 function containerQr() {
   container.style.background = 'none transparent';
+}
+function blePreload(){
+  preload_ble.style.visibility = 'hidden';
 }
 // QR code scan
 function qrPrepare(err, status){

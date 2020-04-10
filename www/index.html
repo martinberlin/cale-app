@@ -60,7 +60,11 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <div class="col-xs-3">Unpaired:</div>
+                                <div class="col-xs-3">Unpaired:
+                                    <div id="preload_ble">
+                                        <img src="./assets/preload.gif"><br><small style="font-size:8px">be patient</small>
+                                    </div>
+                                </div>
                                 <div class="col-xs-9" id="device_list_unpaired">
                                 </div>
                             </div>
@@ -117,11 +121,13 @@
 
                             <label for="apikey">API Key</label>
                             <input type="text" name="apikey" id="apikey" class="form-control">
-                            <div class="col-xs-6">
-                            <button class="form-control btn btn-primary" id="qr_scan">Scan QR Code</button>
-                            </div>
-                            <div class="col-xs-6">
-                                <button class="form-control btn btn-secondary" id="qr_stop">Stop scan</button>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                <button class="form-control btn btn-primary" id="qr_scan">Scan QR Code</button>
+                                </div>
+                                <div class="col-xs-6">
+                                    <button class="form-control btn btn-default" id="qr_stop">Stop scan</button>
+                                </div>
                             </div>
                         </div>
 
