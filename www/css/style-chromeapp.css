@@ -3,6 +3,7 @@
     font-family: 'Lucida Sans', 'Lucida Sans Regular', Helvetica, sans-serif;
     letter-spacing: 0.15em;
 }
+html, body { height: 100% !important }
 
 #udpx {
     margin-left:-8px;

@@ -14,7 +14,7 @@ let tabs = {
     'info':d.getElementById('in-tab')
 };
 
-let apikey = d.getElementById('apikey');
+let apikey = d.getElementById('apikey'), qr_scan = d.getElementById('qr_scan'), qr_stop = d.getElementById('qr_stop');
 let ble_id, ble_type, ble_name, ble_mac = '', ble_enabled = true;
 
 let storage = window.localStorage;
@@ -52,28 +52,31 @@ d.addEventListener('deviceready', function(){
         // Start a scan. Scanning will continue until something is detected or `QRScanner.cancelScan()` is called.
         QRScanner.scan(qrDisplayContents);
     }
+    qr_scan.onclick = function(){
+        containerQr();
+        QRScanner.show();
+        QRScanner.scan(qrDisplayContents);
+    }
+    qr_stop.onclick = function(){
+      qrStop();
+    }
 
     // Bootstrap tabsCollection
     for (var i = 0; i < tabsCollection.length; i++) {
       new Tab(tabsCollection[i],{});
     }
     // Tab events
-    tabs['ble'].onclick = function(b) {
-       console.log('Blue tab');
-       container.style.background = 'white';
+    /*tabs['ble'].onclick = function(b) {
+       containerWhite();
     };
     tabs['wifi'].onclick = function(b) {
-       console.log('WiFi tab');
-       container.style.background = 'white';
+       containerWhite();
     };
     tabs['qr'].onclick = function(b) {
-       console.log('QR tab');
-       container.style.background = 'none transparent';
     };
     tabs['info'].onclick = function(b) {
-       console.log('Info tab');
-       container.style.background = 'white';
-    };
+       containerWhite();
+    };*/
 
     // mDns discovery
     var zeroconf = cordova.plugins.zeroconf;
@@ -403,7 +406,6 @@ d.addEventListener('deviceready', function(){
 function saveFormState() {
   const form = d.querySelector('form');
   const data = objectFromEntries(new FormData(form).entries());
-  console.log(data)
   if (!wifi_store.checked) {
      data.json_config = '';
   }
@@ -468,30 +470,42 @@ function isValidJson(str) {
     return true;
 }
 
+function containerWhite() {
+  /*body = document.getElementsByTagName("body")[0];
+  body.style.background = 'white';*/
+  container.style.background = 'white';
+}
+function containerQr() {
+  container.style.background = 'none transparent';
+}
+// QR code scan
 function qrPrepare(err, status){
   if (err) {
    console.error(err);
   }
   if (status.authorized) {
     console.log('QR: status.authorized');
-    // W00t, you have camera access and the scanner is initialized.
-    // QRscanner.show() should feel very fast.
+    // W00t, you have camera access and the scanner is initialized: QRscanner.show() should feel very fast.
   } else if (status.denied) {
     console.log('QR: status.denied');
-   // The video preview will remain black, and scanning is disabled. We can
-   // try to ask the user to change their mind, but we'll have to send them
-   // to their device settings with `QRScanner.openSettings()`.
+   // The video preview will remain black, and scanning is disabled. use QRScanner.openSettings()
   }
 }
-
+function qrStop(){
+   QRScanner.destroy(function(status){
+     console.log(status);
+   });
+   containerWhite();
+}
 function qrDisplayContents(err, text){
      if(err){
         console.log('QR: qrDisplayContents '+err);
        // an error occurred, or the scan was canceled (error code `6`)
      } else {
        // The scan completed, display the contents of the QR code:
-       alert("ApiKey transferred:\n"+text);
+       qrStop();
        apikey.value = text;
+       alert("ApiKey transferred:\n"+text);
        saveFormState();
      }
    }

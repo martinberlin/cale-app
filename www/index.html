@@ -13,7 +13,7 @@
     <link rel="stylesheet" type="text/css" href="./css/style-chromeapp.css">
 </head>
 
-<body style="background: none transparent">
+<body style="background: none transparent;height:100%">
 <form id="main-form">
     <div class="container" id="container" style="background: white">
         <div class="row" style="background: white">
@@ -29,8 +29,8 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12 col-xs-12" id="settings-container">
-                    <ul class="nav nav-tabs" role="tablist" id="cale-tab" style="background-color:white">
+            <div class="col-md-12 col-xs-12" id="settings-container" style="background: white">
+                    <ul class="nav nav-tabs" role="tablist" id="cale-tab">
                         <li role="presentation" class="active">
                             <a href="#bt" id="ble-tab" role="tab" data-toggle="tab" aria-controls="bt"><small><img width="12" src="./assets/svg/blue.svg">Blue</small></a>
                         </li>
@@ -113,10 +113,16 @@
                         </div>
                         <div role="tabpanel" class="tab-pane" id="qr" aria-labelledby="qr-tab">
                            Please scan the QR code that you can see in CALE backend<br>
-                            <b>User &gt; My Api QR code</b>
-                            <!--<button class="form-control btn btn-primary" id="qr_scan">Scan again QR Code</button>-->
+                            <b>User &gt; My Api QR code</b><br>
+
                             <label for="apikey">API Key</label>
                             <input type="text" name="apikey" id="apikey" class="form-control">
+                            <div class="col-xs-6">
+                            <button class="form-control btn btn-primary" id="qr_scan">Scan QR Code</button>
+                            </div>
+                            <div class="col-xs-6">
+                                <button class="form-control btn btn-secondary" id="qr_stop">Stop scan</button>
+                            </div>
                         </div>
 
                         <div role="tabpanel" class="tab-pane" id="in" aria-labelledby="in-tab" style="background-color:white">
