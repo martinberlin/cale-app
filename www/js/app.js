@@ -1,7 +1,7 @@
 let VERSION = '1.1.2';
 
 let d = document;
-let api = 'http://cale.fasani.de/api';
+let api = 'https://cale.es/api';
 let v = d.getElementById('video');
 let container = d.getElementById('container');
 let wifi_store = d.getElementById('wifi_store'),
