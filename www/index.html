@@ -14,7 +14,7 @@
 </head>
 
 <body style="background: none transparent">
-<form id="main-form">
+
     <div class="container" id="container" style="background: white">
         <div class="row" style="background: white">
             <div class="col-md-12">
@@ -48,11 +48,12 @@
 
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane active" id="sc" aria-labelledby="sc-tab" style="background-color:white">
-                            Select the Screen you want to configure
+                            Select the Screen you want to configure &nbsp;
                             <a href="#" onclick="tableScreen()"><span style="font-size:1.5em" class="glyphicon glyphicon-refresh"></span></a>
                             <table id="screen" class="table table-striped table-condensed dataTable">
                                 <thead><tr></tr></thead>
                             </table>
+                        <!-- An invalid form control with name='json_config' is not focusable. No idea why: -->
                         </div>
 
                         <div role="tabpanel" class="tab-pane" id="bt" aria-labelledby="bt-tab" style="background-color:white">
@@ -95,37 +96,31 @@
 
                             <div class="form-group row">
                                 <div class="col-xs-12">
-
                                     <label for="json_config">JSON Configuration</label>
-                                    <textarea id="json_config" rows="6" name="json_config" class="form-control" required></textarea>
-
+                                    <textarea id="json_config" name="json_config" rows="6" class="form-control" required></textarea>
                                 </div>
                             </div>
-                            <div class="form-group row">
+                            <!--<div class="form-group row">
                                 <div class="col-xs-12 form-check">
                                     <input id="wifi_store" name="wifi_store" type="checkbox" class="form-check-input">
                                     <label for="wifi_store" class="form-check-label">Store config in local storage</label>
                                 </div>
-                            </div>
+                            </div>-->
                             <div class="form-group row">
                                 <div class="col-xs-6">
-                                    <button class="form-control btn btn-warning" id="ble_reset">Reset ESP32</button>
+                                    <button class="form-control btn btn-default" id="ble_reset">Reset ESP32</button>
                                 </div>
                                 <div class="col-xs-6">
-                                    <button class="form-control btn btn-primary" id="ble_set_config">Send config</button>
+                                    <button class="form-control btn btn-danger" id="ble_set_config">Send config</button>
                                 </div>
                             </div>
-                            <!--<div class="form-group row">
-                                <div class="col-xs-6">
-                                    <button class="form-control btn btn-danger" id="ble_erase">Erase config</button>
-                                </div>
-                            </div>-->
                             <div class="form-group row">
                                 <div class="col-xs-12" id="wifi_foot_msg">
                                 </div>
                             </div>
                         </div>
                         <div role="tabpanel" class="tab-pane" id="qr" aria-labelledby="qr-tab">
+                            <form id="main-form">
                            Please scan the QR code that you can see in CALE backend<br>
                             <b>User &gt; My Api QR code</b><br>
 
@@ -133,13 +128,14 @@
                             <input type="text" name="apikey" id="apikey" class="form-control">
                             <div class="row">
                                 <div class="col-xs-6">
-                                <button class="form-control btn btn-primary" id="qr_scan">Scan QR Code</button>
+                                    <button class="form-control btn btn-default" id="qr_stop">Stop scan</button>
                                 </div>
                                 <div class="col-xs-6">
-                                    <button class="form-control btn btn-default" id="qr_stop">Stop scan</button>
+                                    <button class="form-control btn btn-danger" id="qr_scan">Scan QR Code</button>
                                 </div>
                             </div>
                             <div id="version"></div>
+                            </form>
                         </div>
 
                     </div>

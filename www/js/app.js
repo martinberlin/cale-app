@@ -1,6 +1,7 @@
 let VERSION = '1.1.2';
 
 let d = document;
+let api = 'http://cale.fasani.de/api';
 let v = d.getElementById('video');
 let container = d.getElementById('container');
 let wifi_store = d.getElementById('wifi_store'),
@@ -46,14 +47,16 @@ if (!Object.entries) {
 d.addEventListener('deviceready', function(){
     loadFormState();
     QRScanner.prepare(qrPrepare);
-    // Screen table
-    tableScreen();
 
     if (apikey.value == '') {
         QRScanner.show();
         // Start a scan. Scanning will continue until something is detected or `QRScanner.cancelScan()` is called.
         QRScanner.scan(qrDisplayContents);
+    } else {
+        // Screen table
+        tableScreen();
     }
+
     qr_scan.onclick = function(){
         containerQr();
         QRScanner.show();
@@ -82,15 +85,6 @@ d.addEventListener('deviceready', function(){
     d.getElementById('main-form').onchange = function() {
         saveFormState();
     };
-
-    wifi_store.onchange = function() {
-       if (wifi_store.checked) {
-          wifi_msg.innerHTML = '<span style="color:red"><b>Security:</b> When you are done leave it unchecked</span>';
-       } else {
-          wifi_msg.innerText = 'Config was removed from local storage'
-       }
-    }
-
     // Blue App
     let blue = {
         list: function() {
@@ -105,7 +99,7 @@ d.addEventListener('deviceready', function(){
                 function() {
                 bluetoothSerial.list(
                     function(bs) {
-                        d.getElementById('ble_msg').innerText = 'Bluetooth scan. Select target:';
+                        d.getElementById('ble_msg').innerText = 'Bluetooth scan. Select display target:';
 
                         for (var i in bs) {
                             blue.addDevice(bs[i], 'serial', true)
@@ -195,7 +189,7 @@ d.addEventListener('deviceready', function(){
                 ble_name = b.target.getAttribute('data-name');
                 ble_mac = b.target.getAttribute('data-mac');
                 wifi_msg.innerHTML = "<small>"+ble_name+"</small>";
-                let wifiTabInit = tabsCollection[1].Tab;
+                let wifiTabInit = tabsCollection[2].Tab;
                 blue.startConnection();
                 wifiTabInit.show();
                 return false;
@@ -368,7 +362,7 @@ d.addEventListener('deviceready', function(){
      }
 
     // Send WiFi configuration to ESP32
-    ble_set_config.onclick = function() {
+    d.getElementById('ble_set_config').onclick = function() {
         if (json_config.value !== '') {
             if (isValidJson(json_config.value)) {
              blue.sendMessage(json_config.value);
@@ -385,7 +379,7 @@ d.addEventListener('deviceready', function(){
         }
         return false;
     }
-    d.getElementById('version').innerText = "App version:"+VERSION;
+    d.getElementById('version').innerHTML = "<br><small>App version:"+VERSION+"</small>";
 },false);
 
 /**
@@ -395,9 +389,9 @@ d.addEventListener('deviceready', function(){
 function saveFormState() {
   const form = d.querySelector('form');
   const data = objectFromEntries(new FormData(form).entries());
-  if (!wifi_store.checked) {
+  /*if (!wifi_store.checked) {
      data.json_config = '';
-  }
+  }*/
   let formJson = JSON.stringify(data);
   storage.setItem('form', formJson);
 }
@@ -523,36 +517,48 @@ function refreshTable(tableName, data, orderColumns = []) {
     });
 }
 
+var data;
 function tableScreen() {
-     console.log(refreshes);
-            var data,
-                    tableName= '#screen',
-                    columns,
-                    str,
-                    jqxhr = $.ajax('./js/data.json')
-                            .done(function () {
-                                data = JSON.parse(jqxhr.responseText);
-                    if (!refreshes){
-                    $.each(data.columns, function (k, colObj) {
-                        str = '<th>' + colObj.name + '</th>';
-                        $(str).appendTo(tableName+'>thead>tr');
-                    });
-                    }
-                    // Add some Render transformations to Columns
-                    data.columns[0].render = function (data, type, row) {
-                        return '<small>' + data + '</small>';
-                    }
-                    refreshTable(tableName, data, [[1, 'desc']]);
-                })
-            .fail(function (jqXHR, exception) {
-                var msg = '';
-                if (jqXHR.status === 0) {
-                    msg = 'Not connect.\n Verify Network.';
-                } else if (exception === 'parsererror') {
-                    msg = 'Requested JSON parse failed.';
-                } else {
-                    msg = 'Uncaught Error.\n' + jqXHR.responseText;
-                }
-                console.log(msg);
+    let api_url = api+'/'+apikey.value+'/screens';
+
+    var tableName= '#screen', str,
+            jqxhr = $.ajax(api_url)
+                    .done(function () {
+                        data = JSON.parse(jqxhr.responseText);
+            if (!refreshes){
+            $.each(data.columns, function (k, colObj) {
+                str = '<th>' + colObj.n + '</th>';
+                $(str).appendTo(tableName+'>thead>tr');
             });
+            }
+            // Add some Render transformations to Columns
+            data.columns[0].render = function (data, type, row) {
+                return '<small>' + data + '</small>';
+            }
+            data.columns[1].render = function (data, type, row) {
+                return '<small>' + data + '</small>';
+            }
+            data.columns[2].render = function (data, type, row) {
+                return '<button id="'+row.id+'" onclick="scReadConfig(this)" class="btn btn-sm btn-danger">select</button>';
+            }
+            refreshTable(tableName, data, [[1, 'desc']]);
+        })
+    .fail(function (jqXHR, exception) {
+        var msg = '';
+        if (jqXHR.status === 0) {
+            msg = 'Not connect.\n Verify Network.';
+        } else if (exception === 'parsererror') {
+            msg = 'Requested JSON parse failed.';
+        } else {
+            msg = 'Uncaught Error.\n' + jqXHR.responseText;
+        }
+        console.log(msg);
+    });
+}
+
+function scReadConfig(el) {
+    let id = el.getAttribute('id');
+    json_config.value = data[id];
+    blueTab = tabsCollection[1].Tab;
+    blueTab.show();
 }
