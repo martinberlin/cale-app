@@ -1,7 +1,6 @@
 
 .container {
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', Helvetica, sans-serif;
-    letter-spacing: 0.15em;
+    font-family: Helvetica, sans-serif;
 }
 body {
     -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
@@ -14,14 +13,6 @@ body {
     height:100%;
     margin:0px;
     padding:0px;
-}
-
-#udpx {
-    margin-left:-8px;
-}
-
-#canvas {
-    margin-top:6px;
 }
 
 .video-container {

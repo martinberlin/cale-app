@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head lang="en">
     <meta charset="utf-8">
     <meta http-equiv="Content-Security-Policy"
@@ -11,9 +10,10 @@
     <title>CALE</title>
     <link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="./css/style-chromeapp.css">
+    <link rel="stylesheet" type="text/css" href="./css/datatables.min.css">
 </head>
 
-<body style="background: none transparent;height:100%">
+<body style="background: none transparent">
 <form id="main-form">
     <div class="container" id="container" style="background: white">
         <div class="row" style="background: white">
@@ -28,10 +28,14 @@
                 </div>
             </div>
         </div>
+
         <div class="row">
             <div class="col-md-12 col-xs-12" id="settings-container" style="background: white">
                     <ul class="nav nav-tabs" role="tablist" id="cale-tab">
                         <li role="presentation" class="active">
+                            <a href="#sc" id="sc-tab" role="tab" data-toggle="tab" aria-controls="sc"><small>Screen</small></a>
+                        </li>
+                        <li role="presentation" >
                             <a href="#bt" id="ble-tab" role="tab" data-toggle="tab" aria-controls="bt"><small><img width="12" src="./assets/svg/blue.svg">Blue</small></a>
                         </li>
                         <li role="presentation">
@@ -40,13 +44,18 @@
                         <li role="presentation">
                             <a href="#qr" id="qr-tab" role="tab" data-toggle="tab" aria-controls="qr"><small>Api</small></a>
                         </li>
-                        <li role="presentation">
-                            <a href="#in" id="in-tab" role="tab" data-toggle="tab" aria-controls="in"><small>Info</small></a>
-                        </li>
                     </ul>
 
                     <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane active" id="bt" aria-labelledby="bt-tab" style="background-color:white">
+                        <div role="tabpanel" class="tab-pane active" id="sc" aria-labelledby="sc-tab" style="background-color:white">
+                            Select the Screen you want to configure
+                            <a href="#" onclick="tableScreen()"><span style="font-size:1.5em" class="glyphicon glyphicon-refresh"></span></a>
+                            <table id="screen" class="table table-striped table-condensed dataTable">
+                                <thead><tr></tr></thead>
+                            </table>
+                        </div>
+
+                        <div role="tabpanel" class="tab-pane" id="bt" aria-labelledby="bt-tab" style="background-color:white">
 
                             <div class="form-group row">
                                 <div class="col-xs-12" style="margin-top:0.8em" id="ble_msg">
@@ -62,7 +71,8 @@
                             <div class="form-group row">
                                 <div class="col-xs-3">Unpaired:
                                     <div id="preload_ble">
-                                        <img src="./assets/preload.gif"><br><small style="font-size:8px">be patient</small>
+                                        <img src="./assets/preload.gif"><br>
+                                        <small style="font-size:8px">discovering</small>
                                     </div>
                                 </div>
                                 <div class="col-xs-9" id="device_list_unpaired">
@@ -129,16 +139,7 @@
                                     <button class="form-control btn btn-default" id="qr_stop">Stop scan</button>
                                 </div>
                             </div>
-                        </div>
-
-                        <div role="tabpanel" class="tab-pane" id="in" aria-labelledby="in-tab" style="background-color:white">
-                            CALE app let's you configure your display WiFi and Screens. Register in
-                            <a href="https://cale.es">CALE.es</a> to generate dynamic Screens.
-                            <div class="col-xs-12 video-container">
-                                <video id="video" class="video" src="./video/1.mp4" poster="./video/t5.jpg" controls></video>
-                            </div>
-                            <small>support@cale.es | <a href="https://github.com/martinberlin/cale-app/issues">Report a bug</a></small><br>
-                            <div id="version" style="font-size:0.8em"></div>
+                            <div id="version"></div>
                         </div>
 
                     </div>
@@ -146,9 +147,11 @@
         </div>
         </div>
     </form>
-        <script src="cordova.js"></script>
-        <script src="js/bootstrap-native.js"></script>
-        <script src="js/app.js"></script>
+    <script src="cordova.js"></script>
+    <script src="js/bootstrap-native.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/jquery/jquery-2.1.0.min.js"></script>
+    <script src="js/datatables.min.js"></script>
 </body>
 
 </html>

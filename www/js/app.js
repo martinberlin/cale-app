@@ -13,10 +13,10 @@ let tabs = {
     'qr':d.getElementById('qr-tab'),
     'info':d.getElementById('in-tab')
 };
-
 let apikey = d.getElementById('apikey'), qr_scan = d.getElementById('qr_scan'), qr_stop = d.getElementById('qr_stop');
 let preload_ble = d.getElementById('preload_ble');
 let ble_id, ble_type, ble_name, ble_mac = '', ble_enabled = true;
+let refreshes = 0;
 
 let storage = window.localStorage;
 
@@ -46,7 +46,8 @@ if (!Object.entries) {
 d.addEventListener('deviceready', function(){
     loadFormState();
     QRScanner.prepare(qrPrepare);
-    setTimeout(blePreload, 10000);
+    // Screen table
+    tableScreen();
 
     if (apikey.value == '') {
         QRScanner.show();
@@ -68,10 +69,9 @@ d.addEventListener('deviceready', function(){
     }
 
     // Tab events
-    /*tabs['ble'].onclick = function(b) {
-       containerWhite();
+    tabs['ble'].onclick = function(b) {
+       setTimeout(blePreload, 15000);
     };
-    */
 
     // mDns discovery
     var zeroconf = cordova.plugins.zeroconf;
@@ -385,14 +385,6 @@ d.addEventListener('deviceready', function(){
         }
         return false;
     }
-
-    v.addEventListener('play', function(){
-      // play event
-    },false);
-
-    v.addEventListener('pause', function(){
-    },false);
-
     d.getElementById('version').innerText = "App version:"+VERSION;
 },false);
 
@@ -508,4 +500,59 @@ function qrDisplayContents(err, text){
        alert("ApiKey transferred:\n"+text);
        saveFormState();
      }
-   }
+}
+
+function refreshTable(tableName, data, orderColumns = []) {
+    refreshes++;
+    if (refreshes>1) {
+        t = $(tableName).DataTable();
+        t.destroy();
+    }
+    t = $(tableName).dataTable({
+        retrieve: true,
+        dom: '<"col-md-12 text-right">tip',
+        data: data.data,
+        columns: data.columns,
+        order: orderColumns,
+        "fnInitComplete": function (oSettings) {
+            let purge = document.getElementById('purge');
+            if (oSettings.aoData.length>99) {
+                purge.style.visibility = 'visible';
+            }
+        }
+    });
+}
+
+function tableScreen() {
+     console.log(refreshes);
+            var data,
+                    tableName= '#screen',
+                    columns,
+                    str,
+                    jqxhr = $.ajax('./js/data.json')
+                            .done(function () {
+                                data = JSON.parse(jqxhr.responseText);
+                    if (!refreshes){
+                    $.each(data.columns, function (k, colObj) {
+                        str = '<th>' + colObj.name + '</th>';
+                        $(str).appendTo(tableName+'>thead>tr');
+                    });
+                    }
+                    // Add some Render transformations to Columns
+                    data.columns[0].render = function (data, type, row) {
+                        return '<small>' + data + '</small>';
+                    }
+                    refreshTable(tableName, data, [[1, 'desc']]);
+                })
+            .fail(function (jqXHR, exception) {
+                var msg = '';
+                if (jqXHR.status === 0) {
+                    msg = 'Not connect.\n Verify Network.';
+                } else if (exception === 'parsererror') {
+                    msg = 'Requested JSON parse failed.';
+                } else {
+                    msg = 'Uncaught Error.\n' + jqXHR.responseText;
+                }
+                console.log(msg);
+            });
+}
