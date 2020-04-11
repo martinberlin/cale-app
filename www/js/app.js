@@ -1,4 +1,4 @@
-let VERSION = '1.1.2';
+let VERSION = '1.1.3';
 
 let d = document;
 let api = 'https://cale.es/api';
@@ -18,9 +18,8 @@ let apikey = d.getElementById('apikey'), qr_scan = d.getElementById('qr_scan'), 
 let preload_ble = d.getElementById('preload_ble');
 let ble_id, ble_type, ble_name, ble_mac = '', ble_enabled = true;
 let refreshes = 0;
-
+let blueTab, wifiTabInit, apiTabInit; // Tabs
 let storage = window.localStorage;
-
 let device_list_paired = d.getElementById('device_list_paired'),
     device_list_unpaired = d.getElementById('device_list_unpaired'),
     discovery_list = d.getElementById('discovery_list'),
@@ -49,9 +48,9 @@ d.addEventListener('deviceready', function(){
     for (var i = 0; i < tabsCollection.length; i++) {
       new Tab(tabsCollection[i],{});
     }
-    let blueTab = tabsCollection[1].Tab;
-    let wifiTabInit = tabsCollection[2].Tab;
-    let apiTabInit  = tabsCollection[3].Tab;
+    blueTab = tabsCollection[1].Tab;
+    wifiTabInit = tabsCollection[2].Tab;
+    apiTabInit  = tabsCollection[3].Tab;
 
     loadFormState();
     QRScanner.prepare(qrPrepare);
