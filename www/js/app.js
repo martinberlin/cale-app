@@ -45,15 +45,24 @@ if (!Object.entries) {
 
 // DOMContentLoaded   -> deviceready for cordova
 d.addEventListener('deviceready', function(){
+    // Bootstrap tabsCollection
+    for (var i = 0; i < tabsCollection.length; i++) {
+      new Tab(tabsCollection[i],{});
+    }
+    let blueTab = tabsCollection[1].Tab;
+    let wifiTabInit = tabsCollection[2].Tab;
+    let apiTabInit  = tabsCollection[3].Tab;
+
     loadFormState();
     QRScanner.prepare(qrPrepare);
 
     if (apikey.value == '') {
+        // Start a scan and jump to Api tab. Scanning will continue until something is detected or `QRScanner.cancelScan()` is called.
         QRScanner.show();
-        // Start a scan. Scanning will continue until something is detected or `QRScanner.cancelScan()` is called.
         QRScanner.scan(qrDisplayContents);
+        apiTabInit.show();
     } else {
-        // Screen table
+        // Screen table in first Tab
         tableScreen();
     }
 
@@ -64,11 +73,6 @@ d.addEventListener('deviceready', function(){
     }
     qr_stop.onclick = function(){
       qrStop();
-    }
-
-    // Bootstrap tabsCollection
-    for (var i = 0; i < tabsCollection.length; i++) {
-      new Tab(tabsCollection[i],{});
     }
 
     // Tab events
@@ -189,7 +193,6 @@ d.addEventListener('deviceready', function(){
                 ble_name = b.target.getAttribute('data-name');
                 ble_mac = b.target.getAttribute('data-mac');
                 wifi_msg.innerHTML = "<small>"+ble_name+"</small>";
-                let wifiTabInit = tabsCollection[2].Tab;
                 blue.startConnection();
                 wifiTabInit.show();
                 return false;
@@ -491,8 +494,9 @@ function qrDisplayContents(err, text){
        // The scan completed, display the contents of the QR code:
        qrStop();
        apikey.value = text;
-       alert("ApiKey transferred:\n"+text);
        saveFormState();
+       alert("API key is set up correctly\nRedirecting to Screen tab\n"+text);
+       tabsCollection[0].Tab.show();
      }
 }
 
@@ -559,6 +563,5 @@ function tableScreen() {
 function scReadConfig(el) {
     let id = el.getAttribute('id');
     json_config.value = data[id];
-    blueTab = tabsCollection[1].Tab;
     blueTab.show();
 }
