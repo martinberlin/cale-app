@@ -1,6 +1,7 @@
-let VERSION = '1.1.3';
+let VERSION = '1.1.4';
 
 let d = document;
+let body = document.getElementsByTagName("body")[0];
 let api = 'https://cale.es/api';
 let v = d.getElementById('video');
 let container = d.getElementById('container');
@@ -64,14 +65,15 @@ d.addEventListener('deviceready', function(){
         // Screen table in first Tab
         tableScreen();
     }
-
+    // QR button events
     qr_scan.onclick = function(){
         containerQr();
         QRScanner.show();
         QRScanner.scan(qrDisplayContents);
     }
     qr_stop.onclick = function(){
-      qrStop();
+       QRScanner.destroy();
+       containerWhite();
     }
 
     // Tab events
@@ -456,11 +458,11 @@ function isValidJson(str) {
 }
 
 function containerWhite() {
-  /*body = document.getElementsByTagName("body")[0];
-  body.style.background = 'white';*/
+  body.style.background = 'white';
   container.style.background = 'white';
 }
 function containerQr() {
+  body.style.background = 'none transparent';
   container.style.background = 'none transparent';
 }
 function blePreload(){
@@ -479,19 +481,15 @@ function qrPrepare(err, status){
    // The video preview will remain black, and scanning is disabled. use QRScanner.openSettings()
   }
 }
-function qrStop(){
-   QRScanner.destroy(function(status){
-     console.log(status);
-   });
-   containerWhite();
-}
+
 function qrDisplayContents(err, text){
      if(err){
         console.log('QR: qrDisplayContents '+err);
        // an error occurred, or the scan was canceled (error code `6`)
      } else {
        // The scan completed, display the contents of the QR code:
-       qrStop();
+       QRScanner.destroy();
+       containerWhite();
        apikey.value = text;
        saveFormState();
        alert("API key is set up correctly\nRedirecting to Screen tab\n"+text);
